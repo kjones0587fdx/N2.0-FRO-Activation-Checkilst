@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N2.0 Rollout Checklist</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>N2.0 Rollout Checklist</h1>
+
+        <div class="controls">
+            <div class="button-group">
+                <button id="checkAllBtn">Check All</button>
+                <button id="clearAllBtn">Clear All</button>
+                <button id="addNewRowBtn">Add New Row</button>
+                <button id="resetTableBtn">Reset Table</button>
+                <button id="exportCsvBtn">Export to CSV</button>
+                <button id="undoBtn">Undo</button>
+            </div>
+            <div class="search-date-group">
+                <label for="goLiveDateInput">Go Live Date:</label>
+                <input type="date" id="goLiveDateInput">
+                <input type="text" id="searchInput" placeholder="Search...">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="fxgTable">
+                <thead>
+                    <tr>
+                        <th class="fxg-alpha" data-column="0">FXG Alpha</th>
+                        <th class="fxg-id" data-column="1">FXG ID</th>
+                        <th class="checkbox-cell"><a href="https://sad.app.paas.fedex.com/" target="_blank" class="app-link">SAD</a></th>
+                        <th class="checkbox-cell"><a href="https://adsw.app.paas.fedex.com/wsso/dsw" target="_blank" class="app-link">WAMT</a></th>
+                        <th class="checkbox-cell"><a href="https://pdmanifest.app.paas.fedex.com/" target="_blank" class="app-link">FLM</a></th>
+                        <th class="checkbox-cell"><a href="https://psd.app.paas.fedex.com/" target="_blank" class="app-link">PSD</a></th>
+                        <th class="checkbox-cell"><a href="https://pla-dashboard.prod.cloud.fedex.com/plan-contingency" target="_blank" class="app-link">PLA Dashboard</a></th>
+                        <th class="checkbox-cell"><a href="https://pla-server-config.example.com/" target="_blank" class="app-link">PLA Server Config</a></th>
+                        <th class="checkbox-cell"><a href="https://myapps-las01.secure.fedex.com/AMS/" target="_blank" class="app-link">AMS</a></th>
+                        <th class="checkbox-cell"><a href="https://myapps.secure.fedex.com/RdbPortalEx/" target="_blank" class="app-link">RDB</a></th>
+                        <th class="checkbox-cell"><a href="https://dro.routesmart.com/login" target="_blank" class="app-link">FRO CSA</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="paste-section">
+            <h3>Paste Data Here:</h3>
+            <textarea id="pasteArea" placeholder="Paste FXG Alpha and FXG ID columns here..."></textarea>
+            <button id="processDataBtn">Process Pasted Data</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
