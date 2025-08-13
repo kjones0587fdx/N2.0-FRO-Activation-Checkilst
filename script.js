@@ -62,6 +62,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <input type="text" value="${id}" maxlength="4" placeholder="1234">
             </td>
             ${checkboxHTML}
+            <td class="actions-cell">
+                <button class="delete-row-btn" title="Delete Row">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>
+                </button>
+            </td>
         `;
         tableBody.appendChild(row);
         updateRowMissingSummary(row);
@@ -122,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const exportToCSV = () => {
         let csv = [];
-        const headers = Array.from(tableHeader.rows[0].cells).map(cell => `"${cell.textContent.trim()}"`).join(',');
+        const headers = Array.from(tableHeader.rows[0].cells).slice(0, -1).map(cell => `"${cell.textContent.trim()}"`).join(',');
         csv.push(headers);
 
         tableBody.querySelectorAll("tr").forEach(row => {
@@ -147,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const sortTable = (columnIndex) => {
         const headerCell = tableHeader.querySelector(`[data-column="${columnIndex}"]`);
+        if (!headerCell) return;
         const isAsc = !headerCell.classList.contains('asc');
         tableHeader.querySelectorAll('th').forEach(th => th.classList.remove('asc', 'desc'));
         headerCell.classList.add(isAsc ? 'asc' : 'desc');
@@ -200,13 +206,24 @@ document.addEventListener("DOMContentLoaded", () => {
             pasteArea.value = "";
             undoStack = [];
             localStorage.removeItem("checklistState");
-            addNewRow(); // Start with a fresh row
-            saveState();
+            saveState(); // Save the new empty state
+        }
+    });
+
+    tableBody.addEventListener("click", (e) => {
+        const deleteBtn = e.target.closest('.delete-row-btn');
+        if (deleteBtn) {
+            const row = deleteBtn.closest('tr');
+            const alphaValue = row.querySelector('.fxg-alpha input').value || "this row";
+            if (confirm(`Are you sure you want to delete ${alphaValue}?`)) {
+                row.remove();
+                saveState();
+            }
         }
     });
 
     tableBody.addEventListener("input", (e) => {
-        if (e.target.matches('input')) {
+        if (e.target.matches('input[type="text"]')) {
             saveState();
         }
     });
@@ -244,11 +261,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedStateJSON = localStorage.getItem("checklistState");
     if (savedStateJSON) {
         const state = JSON.parse(savedStateJSON);
-        loadState(state);
-        tableBody.querySelectorAll("tr").forEach(updateRowMissingSummary);
-        undoStack.push(JSON.stringify(state)); // Prime the undo stack
-    } else {
-        addNewRow();
-        saveState();
+        if (state && state.tableHTML) {
+            loadState(state);
+            tableBody.querySelectorAll("tr").forEach(updateRowMissingSummary);
+            undoStack.push(JSON.stringify(state));
+        }
     }
 });
