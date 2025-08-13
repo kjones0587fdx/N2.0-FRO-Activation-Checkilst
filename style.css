@@ -1,0 +1,180 @@
+:root {
+    --primary-color: #4D148C;
+    --secondary-color: #FF6600;
+    --light-gray: #f0f0f0;
+    --medium-gray: #dee2e6;
+    --dark-gray: #333;
+    --bg-highlight: #fffcd6;
+    --white: #ffffff;
+    --danger-color: red;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--light-gray);
+    color: var(--dark-gray);
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+h1 {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 20px;
+    margin: 0;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.controls {
+    padding: 15px;
+    background-color: #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.button-group, .search-date-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+#searchInput, #goLiveDateInput {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.table-container {
+    overflow-x: auto;
+    padding: 0 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 800px;
+}
+
+th, td {
+    border: 1px solid var(--medium-gray);
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+th {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    cursor: pointer;
+    position: sticky;
+    top: 0;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tbody tr:hover {
+    background-color: var(--light-gray);
+}
+
+.checkbox-cell {
+    text-align: center;
+    width: 50px;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.5);
+    cursor: pointer;
+}
+
+.fxg-alpha input, .fxg-id input {
+    border: none;
+    background: transparent;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.1em;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 5px;
+}
+
+.fxg-alpha, .fxg-id {
+    width: 80px;
+}
+
+.missing-summary {
+    font-size: 0.8em;
+    color: var(--danger-color);
+    white-space: normal;
+    word-wrap: break-word;
+    margin-top: 4px;
+    display: block;
+}
+
+.highlight-row {
+    background-color: var(--bg-highlight) !important;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+}
+
+.paste-section {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-top: 1px solid var(--medium-gray);
+}
+
+#pasteArea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 100px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.app-link {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.app-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
