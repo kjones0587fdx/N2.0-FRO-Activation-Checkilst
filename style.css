@@ -211,6 +211,33 @@ input[type="checkbox"] {
     text-decoration: underline;
 }
 
+.actions-cell {
+    width: 60px;
+    text-align: center;
+}
+
+.delete-row-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-row-btn:hover {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.delete-row-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
 /* --- PASTE AREA --- */
 .paste-section {
     padding: 25px;
