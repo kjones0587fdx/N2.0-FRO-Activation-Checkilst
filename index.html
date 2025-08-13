@@ -4,25 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N2.0 Rollout Checklist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>N2.0 Rollout Checklist</h1>
-
-        <div class="controls">
-            <div class="button-group">
-                <button id="checkAllBtn">Check All</button>
-                <button id="clearAllBtn">Clear All</button>
-                <button id="addNewRowBtn">Add New Row</button>
-                <button id="resetTableBtn">Reset Table</button>
-                <button id="exportCsvBtn">Export to CSV</button>
-                <button id="undoBtn">Undo</button>
-            </div>
-            <div class="search-date-group">
+        <header class="main-header">
+            <h1>N2.0 Rollout Checklist</h1>
+            <div class="header-controls">
                 <label for="goLiveDateInput">Go Live Date:</label>
                 <input type="date" id="goLiveDateInput">
-                <input type="text" id="searchInput" placeholder="Search...">
+            </div>
+        </header>
+
+        <div class="controls-toolbar">
+            <div class="button-group">
+                <button id="addNewRowBtn" title="Add New Row">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>
+                    <span>Add Row</span>
+                </button>
+                 <button id="checkAllBtn" title="Check All Visible">Check All</button>
+                 <button id="clearAllBtn" title="Clear All Visible">Clear All</button>
+            </div>
+            <div class="search-group">
+                 <input type="text" id="searchInput" placeholder="Search by Alpha or ID...">
+            </div>
+            <div class="button-group">
+                <button id="undoBtn" title="Undo Last Action (Ctrl+Z)">Undo</button>
+                <button id="resetTableBtn" title="Reset Table" class="btn-danger">Reset</button>
+                <button id="exportCsvBtn" title="Export to CSV">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm7-18L5.33 9h3.75v6h3.83V9h3.75L12 2z"/></svg>
+                    <span>Export</span>
+                </button>
             </div>
         </div>
 
@@ -49,8 +64,7 @@
         </div>
 
         <div class="paste-section">
-            <h3>Paste Data Here:</h3>
-            <textarea id="pasteArea" placeholder="Paste FXG Alpha and FXG ID columns here..."></textarea>
+            <textarea id="pasteArea" placeholder="Paste FXG Alpha and FXG ID columns here to bulk-add rows..."></textarea>
             <button id="processDataBtn">Process Pasted Data</button>
         </div>
     </div>
