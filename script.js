@@ -26,8 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const loadState = (state) => {
-        tableBody.innerHTML = state.tableHTML;
-        goLiveDateInput.value = state.goLiveDate;
+        if (state && state.tableHTML) {
+            tableBody.innerHTML = state.tableHTML;
+            goLiveDateInput.value = state.goLiveDate;
+        }
     };
 
     const undo = () => {
@@ -99,13 +101,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let addedCount = 0;
         lines.forEach(line => {
-            const parts = line.split(/\s+/); // Split by any whitespace
+            const parts = line.split(/\s+/);
             const alpha = parts[0]?.trim().toUpperCase().substring(0, 4) || "";
             const id = parts[1]?.trim().substring(0, 4) || "";
 
             if (/^[A-Z]{4}$/.test(alpha) && /^\d{4}$/.test(id) && !existingData.has(alpha)) {
                 addNewRow(alpha, id);
-                existingData.add(alpha); // Prevent duplicates from the same paste
+                existingData.add(alpha);
                 addedCount++;
             }
         });
@@ -144,9 +146,12 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const sortTable = (columnIndex) => {
+        const headerCell = tableHeader.querySelector(`[data-column="${columnIndex}"]`);
+        const isAsc = !headerCell.classList.contains('asc');
+        tableHeader.querySelectorAll('th').forEach(th => th.classList.remove('asc', 'desc'));
+        headerCell.classList.add(isAsc ? 'asc' : 'desc');
+
         const rows = Array.from(tableBody.querySelectorAll("tr"));
-        const isAsc = tableHeader.querySelector(`[data-column="${columnIndex}"]`).classList.toggle('asc');
-        
         rows.sort((a, b) => {
             const valA = a.cells[columnIndex].querySelector('input')?.value.toLowerCase() || '';
             const valB = b.cells[columnIndex].querySelector('input')?.value.toLowerCase() || '';
@@ -162,6 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchTable = () => {
         const filter = searchInput.value.toUpperCase();
         tableBody.querySelectorAll("tr").forEach(row => {
+            if (row.classList.contains('missing-row')) return;
             const alpha = row.querySelector('.fxg-alpha input').value.toUpperCase();
             const id = row.querySelector('.fxg-id input').value.toUpperCase();
             row.style.display = (alpha.includes(filter) || id.includes(filter)) ? "" : "none";
@@ -169,29 +175,44 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // --- Event Listeners ---
+    const getVisibleRows = () => Array.from(tableBody.querySelectorAll('tr')).filter(row => row.style.display !== 'none');
+
     checkAllBtn.addEventListener("click", () => {
-        tableBody.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
-        tableBody.querySelectorAll("tr").forEach(updateRowMissingSummary);
+        getVisibleRows().forEach(row => {
+            row.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+            updateRowMissingSummary(row);
+        });
         saveState();
     });
 
     clearAllBtn.addEventListener("click", () => {
-        tableBody.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-        tableBody.querySelectorAll("tr").forEach(updateRowMissingSummary);
+        getVisibleRows().forEach(row => {
+            row.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updateRowMissingSummary(row);
+        });
         saveState();
     });
     
     resetTableBtn.addEventListener("click", () => {
-        if (confirm("Are you sure you want to reset the entire table?")) {
+        if (confirm("Are you sure you want to reset the entire table? This cannot be undone.")) {
             tableBody.innerHTML = "";
             goLiveDateInput.value = "";
             pasteArea.value = "";
+            undoStack = [];
+            localStorage.removeItem("checklistState");
+            addNewRow(); // Start with a fresh row
+            saveState();
+        }
+    });
+
+    tableBody.addEventListener("input", (e) => {
+        if (e.target.matches('input')) {
             saveState();
         }
     });
 
     tableBody.addEventListener("change", (e) => {
-        if (e.target.matches('input')) {
+        if (e.target.matches('input[type="checkbox"]')) {
             const row = e.target.closest('tr');
             if (row) updateRowMissingSummary(row);
             saveState();
@@ -204,6 +225,13 @@ document.addEventListener("DOMContentLoaded", () => {
             sortTable(parseInt(headerCell.dataset.column, 10));
         }
     });
+    
+    document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.key.toLowerCase() === 'z') {
+            e.preventDefault();
+            undo();
+        }
+    });
 
     addNewRowBtn.addEventListener("click", () => {addNewRow(); saveState();});
     processDataBtn.addEventListener("click", processPastedData);
@@ -213,13 +241,13 @@ document.addEventListener("DOMContentLoaded", () => {
     goLiveDateInput.addEventListener("change", saveState);
 
     // --- Initial Load ---
-    const savedState = localStorage.getItem("checklistState");
-    if (savedState) {
-        const state = JSON.parse(savedState);
+    const savedStateJSON = localStorage.getItem("checklistState");
+    if (savedStateJSON) {
+        const state = JSON.parse(savedStateJSON);
         loadState(state);
+        tableBody.querySelectorAll("tr").forEach(updateRowMissingSummary);
         undoStack.push(JSON.stringify(state)); // Prime the undo stack
     } else {
-        // Start with one empty row if no data is saved
         addNewRow();
         saveState();
     }
